@@ -8,7 +8,7 @@ using Microsoft.Bot.Builder.Luis.Models;
 using Microsoft.Bot.Connector;
 using Newtonsoft.Json;
 
-namespace QnABotWithActivedLearning.Dialogs
+namespace MaratonaBots_BotApp.Dialogs
 {
     [Serializable]
     [LuisModel("c8f1fdf9-de7d-44a9-b8e4-931bf1deccda", "3f5f877eb1f9425084202301d7ee4233")]

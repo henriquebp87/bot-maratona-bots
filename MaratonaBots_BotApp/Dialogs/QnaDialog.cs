@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace QnABotWithActivedLearning.Dialogs
+namespace MaratonaBots_BotApp.Dialogs
 {
     [Serializable]
     public class QnaDialog : QnAMakerDialog

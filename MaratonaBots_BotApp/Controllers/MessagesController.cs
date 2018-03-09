@@ -9,7 +9,7 @@ using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.FormFlow;
 using Microsoft.Bot.Connector;
 
-namespace QnABotWithActivedLearning
+namespace MaratonaBots_BotApp
 {
     [BotAuthentication]
     public class MessagesController : ApiController

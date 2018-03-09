@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace QnABotWithActivedLearning.Models
+namespace MaratonaBots_BotApp.Models
 {
     public class Cotacao
     {

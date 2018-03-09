@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace QnABotWithActivedLearning.Formulario
+namespace MaratonaBots_BotApp.Formulario
 {
     [Serializable]
     [Template(TemplateUsage.NotUnderstood, "Desculpe, não entendi \"{0}\".")]
