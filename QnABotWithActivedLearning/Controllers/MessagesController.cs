@@ -1,8 +1,12 @@
-﻿using System.Net;
+﻿using System;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Builder.FormFlow;
 using Microsoft.Bot.Connector;
 
 namespace QnABotWithActivedLearning
@@ -16,11 +20,28 @@ namespace QnABotWithActivedLearning
         /// </summary>
         public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
         {
+            var currentCulture = Thread.CurrentThread.CurrentCulture;
+            var currentUICulture = Thread.CurrentThread.CurrentUICulture;
+
             if (activity.Type == ActivityTypes.Message)
             {
-                //await Conversation.SendAsync(activity, () => new Dialogs.QnaDialog());
-                //await Conversation.SendAsync(activity, () => new Dialogs.RootDialog());
-                await Conversation.SendAsync(activity, () => new Dialogs.CotacaoDialog());
+                //await Conversation.SendAsync(activity, () => new Dialogs.RootDialog()); //para Dialog default
+                //await Conversation.SendAsync(activity, () => new Dialogs.QnaDialog()); //para FAQ Bot
+                //await Conversation.SendAsync(activity, () => new Dialogs.CotacaoDialog()); //para LUIS Bot
+                await this.SendConversation(activity); //para FormFlow
+            }
+            else if (activity.Type == ActivityTypes.ConversationUpdate)
+            {
+                if (activity.MembersAdded != null && activity.MembersAdded.Any())
+                {
+                    foreach (var member in activity.MembersAdded)
+                    {
+                        if (member.Id != activity.Recipient.Id)
+                        {
+                            await this.SendConversation(activity);
+                        }
+                    }
+                }
             }
             else
             {
@@ -28,6 +49,14 @@ namespace QnABotWithActivedLearning
             }
             var response = Request.CreateResponse(HttpStatusCode.OK);
             return response;
+        }
+
+        private async Task SendConversation(Activity activity)
+        {
+            await Conversation.SendAsync(activity,
+                () => Chain.From(
+                    () => FormDialog.FromForm(
+                        () => Formulario.Pedido.BuildForm(), FormOptions.PromptFieldsWithValues)));
         }
 
         private Activity HandleSystemMessage(Activity message)
