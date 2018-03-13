@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.FormFlow;
+using Microsoft.Bot.Builder.Luis;
 using Microsoft.Bot.Connector;
 
 namespace MaratonaBots_BotApp
@@ -25,10 +27,22 @@ namespace MaratonaBots_BotApp
 
             if (activity.Type == ActivityTypes.Message)
             {
-                //await Conversation.SendAsync(activity, () => new Dialogs.RootDialog()); //para Dialog default
-                //await Conversation.SendAsync(activity, () => new Dialogs.QnaDialog()); //para FAQ Bot
-                //await Conversation.SendAsync(activity, () => new Dialogs.CotacaoDialog()); //para LUIS Bot
-                await this.SendConversation(activity); //para FormFlow
+                //para Dialog default
+                //await Conversation.SendAsync(activity, () => new Dialogs.RootDialog()); 
+
+                //para FAQ Bot
+                //await Conversation.SendAsync(activity, () => new Dialogs.QnaDialog()); 
+
+                //para LUIS Bot
+                var luisAttributes = new LuisModelAttribute(
+                    ConfigurationManager.AppSettings["LuisId"],
+                    ConfigurationManager.AppSettings["LuisSubscriptionKey"]
+                    );
+                var luisService = new LuisService(luisAttributes);
+                await Conversation.SendAsync(activity, () => new Dialogs.CotacaoDialog(luisService));
+
+                //para FormFlow
+                //await this.SendConversation(activity); 
             }
             else if (activity.Type == ActivityTypes.ConversationUpdate)
             {
@@ -38,7 +52,10 @@ namespace MaratonaBots_BotApp
                     {
                         if (member.Id != activity.Recipient.Id)
                         {
-                            await this.SendConversation(activity);
+                            //para FormFlow
+                            //await this.SendConversation(activity);
+
+                            HandleSystemMessage(activity);
                         }
                     }
                 }
