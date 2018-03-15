@@ -51,7 +51,7 @@ namespace MaratonaBots_BotApp.Dialogs
                 {
                     var json = await response.Content.ReadAsStringAsync();
                     var resultado = JsonConvert.DeserializeObject<Models.Cotacao[]>(json);
-                    var cotacoes = resultado.Select(c => $"{c.Nome} ({c.Sigla}) -> {c.Valor}");
+                    var cotacoes = resultado.Select(c => $"{c.Nome} ({c.Sigla}) -> R${c.Valor}");
                     await context.PostAsync($"{string.Join(",", cotacoes)}");
                 }
             }
